@@ -8,7 +8,7 @@ var options = {
 
     //** Required if scaleOverride is true **
     //Number - The number of steps in a hard coded scale
-    scaleSteps: 30,
+    scaleSteps: 10,
     //Number - The value jump in the hard coded scale
     scaleStepWidth: 1,
     //Number - The scale starting value
@@ -109,6 +109,9 @@ function loadData2(requestData, dataArray, labelArray) {
             ]
         }
         var ctx = $("#myChart").get(0).getContext("2d");
+        var maxVal = Math.max.apply(Math, dataArray);
+        options.scaleStepWidth = Math.round(maxVal /10);
+
         new Chart(ctx).Line(data, options);
     }
 }
@@ -117,10 +120,12 @@ function loadData2(requestData, dataArray, labelArray) {
 function loadData() {
     var counter = [];
     var labels = [];
+    const artists = "KATY PERRY";
     const year = [
-        ["2011", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22ABBA%22,%222011-12-31T23:59:59.000Z%22]&startkey=[%22ABBA%22,%222011-01-01T00:00:00.000Z%22]"],
-        ["2012", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22ABBA%22,%222012-12-31T23:59:59.000Z%22]&startkey=[%22ABBA%22,%222012-01-01T00:00:00.000Z%22]"],
-        ["2013", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22ABBA%22,%222013-12-31T23:59:59.000Z%22]&startkey=[%22ABBA%22,%222013-01-01T00:00:00.000Z%22]"]
+        ["2011", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22" + artists + "%22,%222011-12-31T23:59:59.000Z%22]&startkey=[%22" + artists + "%22,%222011-01-01T00:00:00.000Z%22]"],
+        ["2012", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22" + artists + "%22,%222012-12-31T23:59:59.000Z%22]&startkey=[%22" + artists + "%22,%222012-01-01T00:00:00.000Z%22]"],
+        ["2013", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22" + artists + "%22,%222013-12-31T23:59:59.000Z%22]&startkey=[%22" + artists + "%22,%222013-01-01T00:00:00.000Z%22]"]
     ];
+
     loadData2(year, counter, labels);
 }
