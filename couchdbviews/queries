@@ -1,0 +1,10 @@
+http://localhost:5984/ostseewelle/_design/first_play/_view/first_play?startkey=%222011-01-19T16:40:02.000%22&endkey=%222011-02-19T16:40:02.000%22
+
+
+http://localhost:5984/ostseewelle/_design/artist_title/_view/artist_title?key=%22ZUCCHEROSenza%20una%20donna%22
+
+http://localhost:5984/ostseewelle/_design/artist_firstplay/_view/artist_firstplay?
+startkey=%27\[%222%20EIVISSA%22,%20%222011-02-25T02:55:01.000%22\]%27
+startkey='\["1,2010-01-01%2000:00:00"\]'&endkey='\[1,"2010-01-02%2000:00:00"\]'
+
+http://localhost:5984/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22ABBA%22,%222013-12-25T14:38:02.000Z%22]&startkey=[%22ABBA%22,%222011-12-25T14:38:02.000Z%22]
