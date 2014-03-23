@@ -87,55 +87,40 @@ function starten() {
     loadData();
 }
 
+function loadData2(requestData, dataArray, labelArray) {
+    if (requestData.length > 0) {
+        $.getJSON(requestData[0][1],
+            function (data) {
+                var dataArrayNeu = dataArray.concat([data.rows.length]);
+                var labelArrayNeu = labelArray.concat([requestData[0][0]]);
+                loadData2(requestData.splice(1, requestData.length - 1), dataArrayNeu, labelArrayNeu);
+            });
+    } else {
+        var data = {
+            labels: labelArray,
+            datasets: [
+                {
+                    fillColor: "rgba(220,220,220,0.5)",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointStrokeColor: "#fff",
+                    data: dataArray
+                }
+            ]
+        }
+        var ctx = $("#myChart").get(0).getContext("2d");
+        new Chart(ctx).Line(data, options);
+    }
+}
+
 
 function loadData() {
     var counter = [];
-
+    var labels = [];
     const year = [
-        "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22ABBA%22,%222011-12-31T23:59:59.000Z%22]&startkey=[%22ABBA%22,%222011-01-01T00:00:00.000Z%22]",
-        "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22ABBA%22,%222012-12-31T23:59:59.000Z%22]&startkey=[%22ABBA%22,%222012-01-01T00:00:00.000Z%22]",
-        "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22ABBA%22,%222013-12-31T23:59:59.000Z%22]&startkey=[%22ABBA%22,%222013-01-01T00:00:00.000Z%22]"];
-
-    $.getJSON(year[0],
-        function (data) {
-            counter.push(data.rows.length);
-            $.getJSON(year[1],
-                function (data) {
-                    counter.push(data.rows.length);
-                    $.getJSON(year[2],
-                        function (data) {
-                            counter.push(data.rows.length);
-                            var data = {
-                                labels: ["2011", "2012", "2013"],
-                                datasets: [
-                                    {
-                                        fillColor: "rgba(220,220,220,0.5)",
-                                        strokeColor: "rgba(220,220,220,1)",
-                                        pointColor: "rgba(220,220,220,1)",
-                                        pointStrokeColor: "#fff",
-                                        data: counter
-                                    }
-                                ]
-                            }
-                            var ctx = $("#myChart").get(0).getContext("2d");
-                            var myNewChart = new Chart(ctx).Line(data, options);
-                        });
-                });
-        });
-
-//    var data = {
-//        labels: ["2011", "2012", "2013"],
-//        datasets: [
-//            {
-//                fillColor: "rgba(220,220,220,0.5)",
-//                strokeColor: "rgba(220,220,220,1)",
-//                pointColor: "rgba(220,220,220,1)",
-//                pointStrokeColor: "#fff",
-//                data: [5,7,9]
-//            }
-//        ]
-//    }
-//    var ctx = $("#myChart").get(0).getContext("2d");
-//    var myNewChart = new Chart(ctx).Line(data, options);
-
+        ["2011", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22ABBA%22,%222011-12-31T23:59:59.000Z%22]&startkey=[%22ABBA%22,%222011-01-01T00:00:00.000Z%22]"],
+        ["2012", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22ABBA%22,%222012-12-31T23:59:59.000Z%22]&startkey=[%22ABBA%22,%222012-01-01T00:00:00.000Z%22]"],
+        ["2013", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22ABBA%22,%222013-12-31T23:59:59.000Z%22]&startkey=[%22ABBA%22,%222013-01-01T00:00:00.000Z%22]"]
+    ];
+    loadData2(year, counter, labels);
 }
