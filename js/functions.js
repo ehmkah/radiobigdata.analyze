@@ -110,7 +110,7 @@ function loadData2(requestData, dataArray, labelArray) {
         }
         var ctx = $("#myChart").get(0).getContext("2d");
         var maxVal = Math.max.apply(Math, dataArray);
-        options.scaleStepWidth = Math.round(maxVal /10);
+        options.scaleStepWidth = Math.round(maxVal / 10);
 
         new Chart(ctx).Line(data, options);
     }
@@ -118,14 +118,64 @@ function loadData2(requestData, dataArray, labelArray) {
 
 
 function loadData() {
+    const firstPart = "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22";
+    const lastPart = "T00:00:00.000Z%22]";
+
+    function createYearUris() {
+        return [
+            ["2011", firstPart + artists + "%22,%222011-12-31T23:59:59.000Z%22]&startkey=[%22" + artists + "%22,%222011-01-01" + lastPart],
+            ["2012", firstPart + artists + "%22,%222012-12-31T23:59:59.000Z%22]&startkey=[%22" + artists + "%22,%222012-01-01" + lastPart],
+            ["2013", firstPart + artists + "%22,%222013-12-31T23:59:59.000Z%22]&startkey=[%22" + artists + "%22,%222013-01-01" + lastPart]
+        ];
+    }
+
+    function createMonthUris() {
+        return [
+            ["F11", firstPart + artists + "%22,%222011-03-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222011-02-01" + lastPart],
+            ["M11", firstPart + artists + "%22,%222011-04-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222011-03-01" + lastPart],
+            ["A11", firstPart + artists + "%22,%222011-05-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222011-04-01" + lastPart],
+            ["M11", firstPart + artists + "%22,%222011-06-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222011-05-01" + lastPart],
+            ["J11", firstPart + artists + "%22,%222011-07-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222011-06-01" + lastPart],
+            ["J11", firstPart + artists + "%22,%222011-08-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222011-07-01" + lastPart],
+            ["A11", firstPart + artists + "%22,%222011-09-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222011-08-01" + lastPart],
+            ["S11", firstPart + artists + "%22,%222011-10-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222011-09-01" + lastPart],
+            ["O11", firstPart + artists + "%22,%222011-11-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222011-10-01" + lastPart],
+            ["N11", firstPart + artists + "%22,%222011-12-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222011-11-01" + lastPart],
+            ["D11", firstPart + artists + "%22,%222012-01-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222011-12-01" + lastPart],
+
+            ["J12", firstPart + artists + "%22,%222012-02-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-01-01" + lastPart],
+            ["F12", firstPart + artists + "%22,%222012-03-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-02-01" + lastPart],
+            ["M12", firstPart + artists + "%22,%222012-04-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-03-01" + lastPart],
+            ["A12", firstPart + artists + "%22,%222012-05-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-04-01" + lastPart],
+            ["M12", firstPart + artists + "%22,%222012-06-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-05-01" + lastPart],
+            ["J12", firstPart + artists + "%22,%222012-07-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-06-01" + lastPart],
+            ["J12", firstPart + artists + "%22,%222012-08-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-07-01" + lastPart],
+            ["A12", firstPart + artists + "%22,%222012-09-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-08-01" + lastPart],
+            ["S12", firstPart + artists + "%22,%222012-10-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-09-01" + lastPart],
+            ["O12", firstPart + artists + "%22,%222012-11-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-10-01" + lastPart],
+            ["N12", firstPart + artists + "%22,%222012-12-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-11-01" + lastPart],
+            ["D12", firstPart + artists + "%22,%222013-01-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222012-12-01" + lastPart],
+
+            ["J13", firstPart + artists + "%22,%222013-02-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-01-01" + lastPart],
+            ["F13", firstPart + artists + "%22,%222013-03-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-02-01" + lastPart],
+            ["M13", firstPart + artists + "%22,%222013-04-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-03-01" + lastPart],
+            ["A13", firstPart + artists + "%22,%222013-05-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-04-01" + lastPart],
+            ["M13", firstPart + artists + "%22,%222013-06-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-05-01" + lastPart],
+            ["J13", firstPart + artists + "%22,%222013-07-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-06-01" + lastPart],
+            ["J13", firstPart + artists + "%22,%222013-08-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-07-01" + lastPart],
+            ["A13", firstPart + artists + "%22,%222013-09-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-08-01" + lastPart],
+            ["S13", firstPart + artists + "%22,%222013-10-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-09-01" + lastPart],
+            ["O13", firstPart + artists + "%22,%222013-11-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-10-01" + lastPart],
+            ["N13", firstPart + artists + "%22,%222013-12-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-11-01" + lastPart],
+        ];
+    }
+
     var counter = [];
     var labels = [];
-    const artists = "KATY PERRY";
-    const year = [
-        ["2011", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22" + artists + "%22,%222011-12-31T23:59:59.000Z%22]&startkey=[%22" + artists + "%22,%222011-01-01T00:00:00.000Z%22]"],
-        ["2012", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22" + artists + "%22,%222012-12-31T23:59:59.000Z%22]&startkey=[%22" + artists + "%22,%222012-01-01T00:00:00.000Z%22]"],
-        ["2013", "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22" + artists + "%22,%222013-12-31T23:59:59.000Z%22]&startkey=[%22" + artists + "%22,%222013-01-01T00:00:00.000Z%22]"]
-    ];
 
-    loadData2(year, counter, labels);
+    const artists = "REVOLVERHELD";
+
+    const uris = createMonthUris();
+
+    loadData2(uris, counter, labels);
 }
