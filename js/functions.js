@@ -83,17 +83,25 @@ var options = {
 }
 
 
+function registerEvents() {
+    $("#artists").change(function () {
+        $("#artists option:selected").each(function () {
+            loadData($(this).text());
+        });
+    });
+}
 function starten() {
     loadData();
+    registerEvents();
 }
 
-function loadData2(requestData, dataArray, labelArray) {
+function showDiagram(requestData, dataArray, labelArray) {
     if (requestData.length > 0) {
         $.getJSON(requestData[0][1],
             function (data) {
                 var dataArrayNeu = dataArray.concat([data.rows.length]);
                 var labelArrayNeu = labelArray.concat([requestData[0][0]]);
-                loadData2(requestData.splice(1, requestData.length - 1), dataArrayNeu, labelArrayNeu);
+                showDiagram(requestData.splice(1, requestData.length - 1), dataArrayNeu, labelArrayNeu);
             });
     } else {
         var data = {
@@ -116,8 +124,7 @@ function loadData2(requestData, dataArray, labelArray) {
     }
 }
 
-
-function loadData() {
+function createDiagram(artists) {
     const firstPart = "/ostseewelle/_design/artist_play/_view/artist_play?endkey=[%22";
     const lastPart = "T00:00:00.000Z%22]";
 
@@ -166,16 +173,29 @@ function loadData() {
             ["A13", firstPart + artists + "%22,%222013-09-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-08-01" + lastPart],
             ["S13", firstPart + artists + "%22,%222013-10-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-09-01" + lastPart],
             ["O13", firstPart + artists + "%22,%222013-11-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-10-01" + lastPart],
-            ["N13", firstPart + artists + "%22,%222013-12-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-11-01" + lastPart],
+            ["N13", firstPart + artists + "%22,%222013-12-01T00:00:00.000Z%22]&startkey=[%22" + artists + "%22,%222013-11-01" + lastPart]
         ];
     }
 
-    var counter = [];
-    var labels = [];
-
-    const artists = "REVOLVERHELD";
 
     const uris = createMonthUris();
 
-    loadData2(uris, counter, labels);
+    showDiagram(uris, [], []);
+}
+
+function loadArtists() {
+    $.getJSON("/ostseewelle/_design/artist/_view/artist?group=true",
+        function (data) {
+            data.rows.forEach(function (entry) {
+                $("#artists").append("<option value=\"" + entry.key + "\">" + entry.key + "</option>");
+            });
+            //  alert(data.rows[0].key);
+        });
+}
+
+
+function loadData(artists) {
+    artists = artists || "REVOLVERHELD";
+    createDiagram(artists);
+    loadArtists();
 }
